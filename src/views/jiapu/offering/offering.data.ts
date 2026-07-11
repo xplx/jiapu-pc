@@ -1,0 +1,171 @@
+import { BasicColumn, FormSchema } from '/@/components/Table';
+
+const categoryOptions = [
+  { label: '香烛', value: 1 },
+  { label: '鲜花', value: 2 },
+  { label: '供品', value: 3 },
+  { label: '纸钱', value: 4 },
+];
+
+const categoryMap = { 1: '香烛', 2: '鲜花', 3: '供品', 4: '纸钱' };
+
+export const columns: BasicColumn[] = [
+  {
+    title: '图标',
+    width: 60,
+    dataIndex: 'icon',
+    customRender: ({ text }) => text || '-',
+  },
+  {
+    title: '名称',
+    width: 120,
+    dataIndex: 'name',
+  },
+  {
+    title: '分类',
+    width: 100,
+    dataIndex: 'category',
+    customRender: ({ text }) => categoryMap[text] || '-',
+  },
+  {
+    title: '价格(族币)',
+    width: 100,
+    dataIndex: 'price',
+  },
+  {
+    title: '持续时间',
+    width: 120,
+    dataIndex: 'duration',
+    customRender: ({ text }) => {
+      if (text === null || text === undefined) return '永久';
+      const h = text / 3600000;
+      if (h >= 24 && h % 24 === 0) return `${h / 24}天`;
+      if (h >= 1) return `${h}小时`;
+      return `${text / 60000}分钟`;
+    },
+  },
+  {
+    title: '排序',
+    width: 80,
+    dataIndex: 'sortOrder',
+  },
+  {
+    title: '状态',
+    width: 80,
+    dataIndex: 'status',
+    customRender: ({ text }) => {
+      return text === 1 ? '上架' : '下架';
+    },
+  },
+];
+
+export const searchFormSchema: FormSchema[] = [
+  {
+    field: 'name',
+    label: '名称',
+    component: 'JInput',
+    colProps: { span: 6 },
+  },
+  {
+    field: 'category',
+    label: '分类',
+    component: 'Select',
+    componentProps: {
+      options: categoryOptions,
+      allowClear: true,
+      placeholder: '请选择分类',
+    },
+    colProps: { span: 6 },
+  },
+  {
+    field: 'status',
+    label: '状态',
+    component: 'Select',
+    componentProps: {
+      options: [
+        { label: '上架', value: 1 },
+        { label: '下架', value: 0 },
+      ],
+      allowClear: true,
+      placeholder: '请选择状态',
+    },
+    colProps: { span: 6 },
+  },
+];
+
+export const formSchema: FormSchema[] = [
+  {
+    field: 'id',
+    label: 'id',
+    component: 'Input',
+    show: false,
+  },
+  {
+    field: 'name',
+    label: '名称',
+    component: 'Input',
+    required: true,
+    componentProps: {
+      placeholder: '请输入祭品名称',
+    },
+  },
+  {
+    field: 'icon',
+    label: '图标',
+    component: 'Input',
+    required: true,
+    componentProps: {
+      placeholder: '请输入emoji或图片URL',
+    },
+  },
+  {
+    field: 'categoryId',
+    label: '分类',
+    component: 'Select',
+    required: true,
+    componentProps: {
+      placeholder: '请选择分类',
+    },
+  },
+  {
+    field: 'price',
+    label: '价格(族币)',
+    component: 'InputNumber',
+    required: true,
+    defaultValue: 0,
+    componentProps: {
+      min: 0,
+      placeholder: '请输入价格',
+    },
+  },
+  {
+    field: 'duration',
+    label: '持续时间(毫秒)',
+    component: 'InputNumber',
+    componentProps: {
+      min: 0,
+      placeholder: '留空表示永久',
+    },
+  },
+  {
+    field: 'sortOrder',
+    label: '排序',
+    component: 'InputNumber',
+    defaultValue: 0,
+    componentProps: {
+      min: 0,
+    },
+  },
+  {
+    field: 'status',
+    label: '状态',
+    component: 'RadioGroup',
+    defaultValue: 1,
+    componentProps: {
+      options: [
+        { label: '上架', value: 1 },
+        { label: '下架', value: 0 },
+      ],
+    },
+  },
+];
