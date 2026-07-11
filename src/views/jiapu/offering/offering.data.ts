@@ -1,4 +1,5 @@
 import { BasicColumn, FormSchema } from '/@/components/Table';
+import { h } from 'vue';
 
 const categoryOptions = [
   { label: '香烛', value: 1 },
@@ -11,10 +12,10 @@ const categoryMap = { 1: '香烛', 2: '鲜花', 3: '供品', 4: '纸钱' };
 
 export const columns: BasicColumn[] = [
   {
-    title: '图标',
-    width: 60,
+    title: '祭品图',
+    width: 80,
     dataIndex: 'icon',
-    customRender: ({ text }) => text || '-',
+    customRender: ({ text }) => (text ? h('img', { src: text, style: 'width: 40px; height: 40px; object-fit: cover;' }) : '-'),
   },
   {
     title: '名称',
@@ -38,10 +39,7 @@ export const columns: BasicColumn[] = [
     dataIndex: 'duration',
     customRender: ({ text }) => {
       if (text === null || text === undefined) return '永久';
-      const h = text / 3600000;
-      if (h >= 24 && h % 24 === 0) return `${h / 24}天`;
-      if (h >= 1) return `${h}小时`;
-      return `${text / 60000}分钟`;
+      return `${text}分钟`;
     },
   },
   {
@@ -112,10 +110,10 @@ export const formSchema: FormSchema[] = [
   {
     field: 'icon',
     label: '图标',
-    component: 'Input',
+    component: 'JImageUpload',
     required: true,
     componentProps: {
-      placeholder: '请输入emoji或图片URL',
+      text: '上传图标',
     },
   },
   {
@@ -140,7 +138,7 @@ export const formSchema: FormSchema[] = [
   },
   {
     field: 'duration',
-    label: '持续时间(毫秒)',
+    label: '持续时间(分钟)',
     component: 'InputNumber',
     componentProps: {
       min: 0,
