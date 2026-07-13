@@ -3,7 +3,6 @@ node_modules
 .github
 dist
 .cache
-build
 
 tests/server/static
 tests/server/static/upload
