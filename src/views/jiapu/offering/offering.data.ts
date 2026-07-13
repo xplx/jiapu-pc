@@ -1,6 +1,8 @@
 import { BasicColumn, FormSchema } from '/@/components/Table';
 import { h } from 'vue';
 
+const baseUploadUrl = import.meta.env.VITE_GLOB_DOMAIN_URL || '';
+
 const categoryOptions = [
   { label: '香烛', value: 1 },
   { label: '鲜花', value: 2 },
@@ -114,6 +116,7 @@ export const formSchema: FormSchema[] = [
     required: true,
     componentProps: {
       text: '上传图标',
+      uploadUrl: `${baseUploadUrl}/mini/jiapu/upload/uploadMinio`,
     },
   },
   {

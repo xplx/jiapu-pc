@@ -23,8 +23,7 @@ export const getList = (params) => {
  * @param isUpdate
  */
 export const saveOrUpdate = (params, isUpdate) => {
-  const url = isUpdate ? Api.edit : Api.save;
-  return defHttp.post({ url: url, params });
+  return isUpdate ? defHttp.put({ url:  Api.edit, params }) : defHttp.post({ url: Api.save, params });
 };
 
 /**
