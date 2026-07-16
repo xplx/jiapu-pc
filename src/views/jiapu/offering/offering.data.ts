@@ -3,21 +3,12 @@ import { h } from 'vue';
 
 const baseUploadUrl = import.meta.env.VITE_GLOB_DOMAIN_URL || '';
 
-const categoryOptions = [
-  { label: '香烛', value: 1 },
-  { label: '鲜花', value: 2 },
-  { label: '供品', value: 3 },
-  { label: '纸钱', value: 4 },
-];
-
-const categoryMap = { 1: '香烛', 2: '鲜花', 3: '供品', 4: '纸钱' };
-
 export const columns: BasicColumn[] = [
   {
     title: '祭品图',
     width: 80,
     dataIndex: 'icon',
-    customRender: ({ text }) => (text ? h('img', { src: text, style: 'width: 40px; height: 40px; object-fit: cover;' }) : '-'),
+    customRender: ({ text }) => (text ? h('img', { src: text, style: 'width: 40px; height: 40px; object-fit: contain;' }) : '-'),
   },
   {
     title: '名称',
@@ -27,8 +18,7 @@ export const columns: BasicColumn[] = [
   {
     title: '分类',
     width: 100,
-    dataIndex: 'category',
-    customRender: ({ text }) => categoryMap[text] || '-',
+    dataIndex: 'categoryName',
   },
   {
     title: '价格(族币)',
@@ -67,11 +57,10 @@ export const searchFormSchema: FormSchema[] = [
     colProps: { span: 6 },
   },
   {
-    field: 'category',
+    field: 'categoryId',
     label: '分类',
     component: 'Select',
     componentProps: {
-      options: categoryOptions,
       allowClear: true,
       placeholder: '请选择分类',
     },
@@ -110,6 +99,15 @@ export const formSchema: FormSchema[] = [
     },
   },
   {
+    field: 'categoryId',
+    label: '分类',
+    component: 'Select',
+    required: true,
+    componentProps: {
+      placeholder: '请选择分类',
+    },
+  },
+  {
     field: 'icon',
     label: '图标',
     component: 'JImageUpload',
@@ -120,12 +118,16 @@ export const formSchema: FormSchema[] = [
     },
   },
   {
-    field: 'categoryId',
-    label: '分类',
-    component: 'Select',
+    field: 'path',
+    label: '播放源',
+    component: 'JUpload',
     required: true,
+    show: false,
     componentProps: {
-      placeholder: '请选择分类',
+      text: '上传音频',
+      fileType: 'file',
+      accept: 'audio/*',
+      action: `${baseUploadUrl}/mini/jiapu/upload/uploadMinio`,
     },
   },
   {

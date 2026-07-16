@@ -20,12 +20,27 @@
 
   const emit = defineEmits(['register', 'success']);
   const isUpdate = ref(true);
+  const CATEGORY_AUDIO = '2077301133075955713';
 
   const [registerForm, { resetFields, setFieldsValue, validate, updateSchema }] = useForm({
     schemas: formSchema,
     showActionButtonGroup: false,
     labelWidth: 120,
   });
+
+  // 根据分类切换音频上传框显示
+  async function toggleAudioField(categoryId) {
+    const isAudio = categoryId === CATEGORY_AUDIO;
+    await updateSchema({
+      field: 'path',
+      show: isAudio,
+      required: isAudio,
+    });
+    // 切换分类时清空已上传的音频
+    if (!isAudio) {
+      await setFieldsValue({ path: undefined });
+    }
+  }
 
   const [registerModal, { setModalProps, closeModal }] = useModalInner(async (data) => {
     await resetFields();
@@ -37,9 +52,12 @@
       field: 'categoryId',
       componentProps: {
         options: categoryList.map((item) => ({ label: item.name, value: item.id })),
+        onChange: (val) => toggleAudioField(val),
       },
     });
     if (unref(isUpdate)) {
+      // 先切换音频框显示，再回填数据，避免清空已上传的文件
+      await toggleAudioField(data.record?.categoryId);
       await setFieldsValue({ ...data.record });
     }
   });

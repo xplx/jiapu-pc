@@ -1,16 +1,26 @@
 import { BasicColumn, FormSchema } from '/@/components/Table';
+import { getDictItemsByCode } from '/@/utils/dict';
+
+const belongDictItems = getDictItemsByCode('offering_category') || [];
+
+function getBelongText(value) {
+  if (value === null || value === undefined || value === '') return '-';
+  const item = belongDictItems.find((d) => d.value === String(value));
+  console.log(belongDictItems);
+  return item ? item.text : value;
+}
 
 export const columns: BasicColumn[] = [
-  {
-    title: '图标',
-    width: 60,
-    dataIndex: 'icon',
-    customRender: ({ text }) => text || '-',
-  },
   {
     title: '名称',
     width: 120,
     dataIndex: 'name',
+  },
+  {
+    title: '归属',
+    width: 120,
+    dataIndex: 'belong',
+    customRender: ({ text }) => getBelongText(text),
   },
   {
     title: '排序',
@@ -67,11 +77,13 @@ export const formSchema: FormSchema[] = [
     },
   },
   {
-    field: 'icon',
-    label: '图标',
-    component: 'Input',
+    field: 'belong',
+    label: '归属',
+    component: 'JDictSelectTag',
+    defaultValue: 3,
     componentProps: {
-      placeholder: '请输入emoji或图片URL',
+      dictCode: 'offering_category',
+      placeholder: '请选择归属',
     },
   },
   {

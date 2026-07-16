@@ -32,6 +32,8 @@
   import { useListPage } from '/@/hooks/system/useListPage';
   import { columns, searchFormSchema } from './offering.data';
   import { getList, deleteOffering, batchDeleteOffering, toggleStatus } from './offering.api';
+  import { getAllList } from '../offeringCategory/offeringCategory.api';
+  import { onMounted } from 'vue';
 
   const [registerModal, { openModal }] = useModal();
 
@@ -47,7 +49,17 @@
     },
   });
 
-  const [registerTable, { reload }, { rowSelection, selectedRowKeys }] = tableContext;
+  const [registerTable, { reload, getForm }, { rowSelection, selectedRowKeys }] = tableContext;
+
+  onMounted(async () => {
+    const categoryList = await getAllList();
+    await getForm().updateSchema({
+      field: 'categoryId',
+      componentProps: {
+        options: categoryList.map((item) => ({ label: item.name, value: item.id })),
+      },
+    });
+  });
 
   function handleAdd() {
     openModal(true, { isUpdate: false });

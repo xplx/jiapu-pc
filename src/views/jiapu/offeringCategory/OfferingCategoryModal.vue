@@ -31,7 +31,12 @@
     setModalProps({ confirmLoading: false });
     isUpdate.value = !!data?.isUpdate;
     if (unref(isUpdate)) {
-      await setFieldsValue({ ...data.record });
+      const record = { ...data.record };
+      // belong 字典选项的 value 是字符串，回显时需转为字符串
+      if (record.belong !== null && record.belong !== undefined) {
+        record.belong = String(record.belong);
+      }
+      await setFieldsValue(record);
     }
   });
 
